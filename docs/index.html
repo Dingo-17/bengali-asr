@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Bengali Dialect Transcription System for BRAC - Production-ready ASR system for Bengali dialects">
+    <meta name="keywords" content="Bengali, ASR, Speech Recognition, BRAC, Dialect, Transcription">
+    <title>Bengali Dialect Transcription System | BRAC</title>
+    <link rel="stylesheet" href="styles.css?v=4">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+Bengali:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-brand">
+                <i class="fas fa-microphone-alt"></i>
+                <span>BRAC Bengali ASR</span>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#demo">Demo</a></li>
+                <li><a href="https://github.com/BRAC/bengali-dialect-transcription" target="_blank">GitHub</a></li>
+            </ul>
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1 class="hero-title">Bengali Dialect Transcription System</h1>
+                <p class="hero-subtitle">Production-ready ASR system for Bengali dialects, optimized for BRAC's regional variations</p>
+                <div class="hero-buttons">
+                    <a href="#demo" class="btn btn-primary">
+                        <i class="fas fa-play-circle"></i> Try Demo
+                    </a>
+                    <a href="https://github.com/BRAC/bengali-dialect-transcription" class="btn btn-secondary">
+                        <i class="fab fa-github"></i> View on GitHub
+                    </a>
+                </div>
+                <div class="hero-stats">
+                    <div class="stat">
+                        <i class="fas fa-language"></i>
+                        <h3>99+</h3>
+                        <p>Languages Supported</p>
+                    </div>
+                    <div class="stat">
+                        <i class="fas fa-database"></i>
+                        <h3>196+</h3>
+                        <p>Hours of Training Data</p>
+                    </div>
+                    <div class="stat">
+                        <i class="fas fa-brain"></i>
+                        <h3>2</h3>
+                        <p>AI Models (Wav2Vec2 & Whisper)</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Demo Section -->
+    <section id="demo" class="demo">
+        <div class="container">
+            <h2 class="section-title">Try It Live</h2>
+            <p class="section-subtitle">Upload a Bengali audio file or record your voice to see transcription in action</p>
+            
+            <div class="demo-container">
+                <div class="upload-area" id="uploadArea">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    <h3>Upload Audio File</h3>
+                    <p>Drag & drop your audio file here or click to browse</p>
+                    <p class="file-formats">Supported: MP3, WAV, M4A, OGG (Max 10MB)</p>
+                    <input type="file" id="audioFile" accept="audio/*" hidden>
+                    <button class="btn btn-primary" onclick="document.getElementById('audioFile').click()">
+                        <i class="fas fa-folder-open"></i> Choose File
+                    </button>
+                </div>
+
+                <div class="or-divider">
+                    <span>OR</span>
+                </div>
+
+                <div class="record-area">
+                    <i class="fas fa-microphone"></i>
+                    <h3>Record Audio</h3>
+                    <p>Click the button below to start recording</p>
+                    <button class="btn btn-record" id="recordBtn">
+                        <i class="fas fa-microphone"></i> Start Recording
+                    </button>
+                    <div id="recordingStatus" class="recording-status hidden">
+                        <span class="recording-dot"></span>
+                        Recording... <span id="recordingTime">0:00</span>
+                    </div>
+                </div>
+            </div>
+
+            <div id="resultArea" class="result-area hidden">
+                <h3><i class="fas fa-file-alt"></i> Transcription Result</h3>
+                <div class="result-tabs">
+                    <button class="tab-btn active" data-tab="bengali">Bengali</button>
+                    <button class="tab-btn" data-tab="latin">Latin</button>
+                    <button class="tab-btn" data-tab="ipa">IPA</button>
+                </div>
+                <div class="result-content">
+                    <div class="tab-content active" id="bengali">
+                        <p class="result-text">আমি বাংলায় কথা বলছি</p>
+                    </div>
+                    <div class="tab-content" id="latin">
+                        <p class="result-text">ami banglay kotha bolchi</p>
+                    </div>
+                    <div class="tab-content" id="ipa">
+                        <p class="result-text">[ɑmi bɑŋlɑj kot̪ʰɑ bolt͡ʃʰi]</p>
+                    </div>
+                </div>
+                <div class="result-actions">
+                    <button class="btn btn-secondary"><i class="fas fa-copy"></i> Copy</button>
+                    <button class="btn btn-secondary"><i class="fas fa-download"></i> Download</button>
+                    <button class="btn btn-secondary"><i class="fas fa-share-alt"></i> Share</button>
+                </div>
+                <p class="confidence">Confidence: <span class="confidence-score">95%</span></p>
+            </div>
+
+            <div class="demo-note">
+                <i class="fas fa-info-circle"></i>
+                <p><strong>Note:</strong> This is a demo interface. For production use, please set up the API server as described in the documentation.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Tech Stack Section -->
+    <section class="tech-stack">
+        <div class="container">
+            <h2 class="section-title">Built With</h2>
+            <div class="tech-logos">
+                <div class="tech-item">
+                    <i class="fab fa-python"></i>
+                    <p>Python</p>
+                </div>
+                <div class="tech-item">
+                    <i class="fas fa-brain"></i>
+                    <p>PyTorch</p>
+                </div>
+                <div class="tech-item">
+                    <i class="fas fa-robot"></i>
+                    <p>Transformers</p>
+                </div>
+                <div class="tech-item">
+                    <i class="fab fa-react"></i>
+                    <p>React</p>
+                </div>
+                <div class="tech-item">
+                    <i class="fas fa-server"></i>
+                    <p>FastAPI</p>
+                </div>
+                <div class="tech-item">
+                    <i class="fab fa-docker"></i>
+                    <p>Docker</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3><i class="fas fa-microphone-alt"></i> BRAC Bengali ASR</h3>
+                    <p>Production-ready speech recognition for Bengali dialects</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Resources</h4>
+                    <ul>
+                        <li><a href="https://github.com/BRAC/bengali-dialect-transcription">GitHub</a></li>
+                        <li><a href="https://github.com/BRAC/bengali-dialect-transcription#readme">Documentation</a></li>
+                        <li><a href="https://github.com/BRAC/bengali-dialect-transcription/issues">Report Issue</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Datasets</h4>
+                    <ul>
+                        <li><a href="https://www.openslr.org/53/">OpenSLR SLR53</a></li>
+                        <li><a href="https://commonvoice.mozilla.org/bn">Common Voice</a></li>
+                        <li><a href="https://bengali.ai/">Bengali.AI</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Connect</h4>
+                    <div class="social-links">
+                        <a href="https://github.com/BRAC"><i class="fab fa-github"></i></a>
+                        <a href="https://twitter.com/BRAC"><i class="fab fa-twitter"></i></a>
+                        <a href="https://www.linkedin.com/company/brac"><i class="fab fa-linkedin"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 BRAC Data Science Team. Licensed under MIT License.</p>
+                <p>Last Updated: October 2025</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

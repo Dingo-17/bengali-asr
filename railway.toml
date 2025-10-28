@@ -1,0 +1,14 @@
+[build]
+builder = "NIXPACKS"
+buildCommand = "pip install --no-cache-dir -r requirements.txt"
+
+[deploy]
+startCommand = "uvicorn inference.server:app --host 0.0.0.0 --port $PORT --workers 2"
+restartPolicyType = "ON_FAILURE"
+restartPolicyMaxRetries = 10
+healthcheckPath = "/health"
+healthcheckTimeout = 300
+
+[env]
+PYTHONUNBUFFERED = "1"
+MODEL_TYPE = "wav2vec2"

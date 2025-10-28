@@ -1,0 +1,69 @@
+# Core ML/Data Science
+torch>=2.0.0
+torchaudio>=2.0.0
+transformers>=4.35.0
+datasets>=2.14.0
+numpy>=1.24.0
+pandas>=2.0.0
+scikit-learn>=1.3.0
+
+# Audio Processing
+librosa>=0.10.0
+soundfile>=0.12.0
+resampy>=0.4.2
+
+# Evaluation
+jiwer>=3.0.0
+
+# Data Augmentation
+audiomentations>=0.33.0
+
+# Progress & Logging
+tqdm>=4.66.0
+wandb>=0.15.0  # Optional: experiment tracking
+
+# NLP & Text Processing
+epitran>=1.24  # G2P (Grapheme-to-Phoneme)
+aksharamukha>=2.0.0  # Script transliteration
+indic-nlp-library>=0.92  # Bengali text normalization
+bnlp-toolkit>=3.6.0  # Bengali NLP utilities
+
+# API Server
+fastapi>=0.104.0
+uvicorn[standard]>=0.24.0
+python-multipart>=0.0.6  # File uploads
+pydantic>=2.4.0
+python-jose[cryptography]>=3.3.0  # JWT tokens (optional)
+slowapi>=0.1.9  # Rate limiting
+
+# Model Optimization
+onnx>=1.15.0
+onnxruntime>=1.16.0
+optimum[onnxruntime]>=1.14.0
+
+# Utilities
+PyYAML>=6.0
+python-dotenv>=1.0.0
+requests>=2.31.0
+aiofiles>=23.2.0
+
+# Development & Testing
+pytest>=7.4.0
+pytest-asyncio>=0.21.0
+black>=23.11.0
+flake8>=6.1.0
+mypy>=1.7.0
+
+# Jupyter (for notebooks)
+jupyter>=1.0.0
+ipywidgets>=8.1.0
+matplotlib>=3.8.0
+seaborn>=0.13.0
+plotly>=5.17.0
+
+# Optional: GPU acceleration
+# accelerate>=0.24.0  # Uncomment for multi-GPU training
+# bitsandbytes>=0.41.0  # Uncomment for 8-bit optimization
+
+# Note: Some packages may have import errors during linting but will install correctly
+# Install with: pip install -r requirements.txt

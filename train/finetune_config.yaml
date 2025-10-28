@@ -1,0 +1,145 @@
+# Fine-tuning Configuration for Bengali ASR
+# This YAML file contains recommended hyperparameters for training
+
+# Model Configuration
+model:
+  name: "facebook/wav2vec2-large-xlsr-53"  # or "openai/whisper-small"
+  attention_dropout: 0.1
+  hidden_dropout: 0.1
+  feat_proj_dropout: 0.0
+  mask_time_prob: 0.05
+  layerdrop: 0.1
+
+# Data Configuration
+data:
+  train_tsv: "../data/processed/train.tsv"
+  valid_tsv: "../data/processed/valid.tsv"
+  test_tsv: "../data/processed/test.tsv"
+  sample_rate: 16000
+  max_duration_seconds: 20  # Max audio length
+  min_duration_seconds: 0.5  # Min audio length
+  
+  # BRAC dialect data (for continued fine-tuning)
+  brac_dialect_train: "../data/brac_dialect/train.tsv"
+  brac_dialect_valid: "../data/brac_dialect/valid.tsv"
+
+# Training Configuration
+training:
+  output_dir: "../models/wav2vec2_bengali"
+  
+  # Batch sizes
+  per_device_train_batch_size: 8
+  per_device_eval_batch_size: 8
+  gradient_accumulation_steps: 2
+  
+  # Optimization
+  learning_rate: 3.0e-4
+  warmup_steps: 500
+  weight_decay: 0.01
+  max_grad_norm: 1.0
+  
+  # Scheduler
+  lr_scheduler_type: "linear"  # or "cosine"
+  
+  # Training length
+  num_train_epochs: 30
+  max_steps: -1  # Set to override num_train_epochs
+  
+  # Evaluation & Checkpointing
+  eval_strategy: "steps"
+  eval_steps: 500
+  save_strategy: "steps"
+  save_steps: 500
+  save_total_limit: 3
+  logging_steps: 100
+  
+  # Best model selection
+  load_best_model_at_end: true
+  metric_for_best_model: "wer"
+  greater_is_better: false
+  
+  # Mixed precision & optimization
+  fp16: true  # Set to false if no GPU or older GPU
+  gradient_checkpointing: true
+  
+  # Early stopping
+  early_stopping_patience: 5
+  
+  # Misc
+  seed: 42
+  group_by_length: true  # Group similar length samples for efficiency
+  dataloader_num_workers: 4
+  remove_unused_columns: false
+
+# Data Augmentation (applied during training)
+augmentation:
+  enabled: true
+  speed_perturbation: [0.9, 1.0, 1.1]
+  noise_injection_prob: 0.3
+  volume_perturbation_db: [-3, 3]
+
+# Logging
+logging:
+  # W&B (Weights & Biases)
+  wandb:
+    enabled: false  # Set to true and add WANDB_API_KEY env variable
+    project: "bengali-asr-brac"
+    entity: null  # Your W&B username/team
+    run_name: null  # Auto-generated if null
+  
+  # Tensorboard
+  tensorboard:
+    enabled: true
+    log_dir: "../logs/tensorboard"
+
+# Text Normalization (Bengali-specific)
+text_normalization:
+  # Convert numbers to words
+  normalize_numbers: true
+  
+  # Convert English to Bengali script
+  normalize_english: false
+  
+  # Remove punctuation for training
+  remove_punctuation: false
+  
+  # Lowercase (not applicable for Bengali)
+  lowercase: false
+  
+  # Normalize Unicode (NFKC normalization)
+  unicode_normalize: true
+
+# For Continued Fine-tuning on BRAC Dialect
+# Use these settings when fine-tuning an already trained model
+continued_finetuning:
+  enabled: false
+  pretrained_model_path: "../models/wav2vec2_bengali/checkpoint-best"
+  learning_rate: 1.0e-5  # Lower LR for fine-tuning
+  num_train_epochs: 10
+  freeze_feature_encoder: true
+  freeze_n_layers: 0  # Number of transformer layers to freeze (0 = none)
+
+# Inference Configuration (for testing)
+inference:
+  batch_size: 16
+  beam_size: 5  # For beam search decoding
+  use_lm: false  # Use language model for decoding
+  lm_path: null  # Path to KenLM model
+  alpha: 0.5  # LM weight
+  beta: 1.5  # Word insertion bonus
+
+# Hardware Configuration
+hardware:
+  device: "cuda"  # "cuda", "cpu", or "mps" (Apple Silicon)
+  mixed_precision_dtype: "fp16"  # "fp16" or "bf16"
+  num_gpus: 1
+  distributed_training: false
+
+# Additional Notes:
+# - For CPU-only training, set fp16=false and reduce batch_size to 2-4
+# - For multi-GPU, use torchrun or accelerate launch
+# - Adjust batch_size and gradient_accumulation_steps based on GPU memory
+# - Typical GPU memory usage:
+#   - 8GB: batch_size=4, gradient_accumulation_steps=4
+#   - 16GB: batch_size=8, gradient_accumulation_steps=2
+#   - 24GB+: batch_size=16, gradient_accumulation_steps=1

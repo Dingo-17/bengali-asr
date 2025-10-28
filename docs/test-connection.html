@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Connection Test - Bengali ASR</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 600px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        
+        h1 {
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+        
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+        
+        .section {
+            background: #f7f9fc;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .section h2 {
+            color: #333;
+            font-size: 18px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .input-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            color: #555;
+            margin-bottom: 8px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        
+        input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e1e8ed;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+        
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 14px 30px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: transform 0.2s, box-shadow 0.2s;
+            width: 100%;
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+        }
+        
+        button:active {
+            transform: translateY(0);
+        }
+        
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        
+        .status {
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        
+        .status.loading {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            color: #856404;
+        }
+        
+        .status.success {
+            background: #d4edda;
+            border-left: 4px solid #28a745;
+            color: #155724;
+        }
+        
+        .status.error {
+            background: #f8d7da;
+            border-left: 4px solid #dc3545;
+            color: #721c24;
+        }
+        
+        .status pre {
+            background: white;
+            padding: 15px;
+            border-radius: 6px;
+            margin-top: 10px;
+            overflow-x: auto;
+            font-size: 12px;
+        }
+        
+        .icon {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+        }
+        
+        .endpoints {
+            margin-top: 15px;
+        }
+        
+        .endpoint {
+            background: white;
+            padding: 10px 15px;
+            border-radius: 6px;
+            margin-bottom: 8px;
+            font-size: 13px;
+            color: #555;
+        }
+        
+        .endpoint strong {
+            color: #667eea;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔌 API Connection Test</h1>
+        <p class="subtitle">Test your Bengali ASR backend connection</p>
+        
+        <div class="section">
+            <h2>
+                <span class="icon">⚙️</span>
+                Configuration
+            </h2>
+            <div class="input-group">
+                <label for="apiUrl">Backend API URL</label>
+                <input 
+                    type="text" 
+                    id="apiUrl" 
+                    placeholder="http://localhost:8000"
+                    value="http://localhost:8000"
+                >
+            </div>
+            <button onclick="testConnection()">Test Connection</button>
+        </div>
+        
+        <div class="section">
+            <h2>
+                <span class="icon">📡</span>
+                Available Endpoints
+            </h2>
+            <div class="endpoints">
+                <div class="endpoint">
+                    <strong>GET</strong> /health - Health check
+                </div>
+                <div class="endpoint">
+                    <strong>POST</strong> /transcribe - Transcribe audio
+                </div>
+                <div class="endpoint">
+                    <strong>GET</strong> /docs - API documentation
+                </div>
+            </div>
+        </div>
+        
+        <div id="result"></div>
+    </div>
+
+    <script>
+        async function testConnection() {
+            const apiUrl = document.getElementById('apiUrl').value.trim();
+            const resultDiv = document.getElementById('result');
+            
+            // Validation
+            if (!apiUrl) {
+                showResult('error', 'Please enter an API URL');
+                return;
+            }
+            
+            // Show loading
+            showResult('loading', '⏳ Testing connection...');
+            
+            try {
+                // Test 1: Health Check
+                const healthUrl = `${apiUrl}/health`;
+                const healthResponse = await fetch(healthUrl);
+                
+                if (!healthResponse.ok) {
+                    throw new Error(`HTTP ${healthResponse.status}: ${healthResponse.statusText}`);
+                }
+                
+                const healthData = await healthResponse.json();
+                
+                // Success
+                showResult('success', 
+                    `✅ Connection successful!\n\n` +
+                    `<strong>Server Details:</strong>\n` +
+                    `<pre>${JSON.stringify(healthData, null, 2)}</pre>\n` +
+                    `<div style="margin-top: 15px; padding-top: 15px; border-top: 2px solid #c3e6cb;">` +
+                    `<strong>Next Steps:</strong>\n` +
+                    `1. ✅ Backend is running\n` +
+                    `2. Update <code>docs/script.js</code> with this URL\n` +
+                    `3. Test audio transcription on main site\n` +
+                    `4. Deploy to production\n` +
+                    `</div>`
+                );
+                
+            } catch (error) {
+                // Error handling
+                let errorMessage = '❌ Connection failed!\n\n';
+                
+                if (error.message.includes('Failed to fetch')) {
+                    errorMessage += 
+                        `<strong>Possible causes:</strong>\n` +
+                        `• Backend is not running\n` +
+                        `• Wrong URL or port\n` +
+                        `• CORS issues\n\n` +
+                        `<strong>Solutions:</strong>\n` +
+                        `1. Start backend:\n` +
+                        `   <code>uvicorn inference.server:app --host 0.0.0.0 --port 8000</code>\n\n` +
+                        `2. Check if backend is running:\n` +
+                        `   <code>curl ${apiUrl}/health</code>\n\n` +
+                        `3. Verify port is not in use:\n` +
+                        `   <code>lsof -i :8000</code>`;
+                } else {
+                    errorMessage += 
+                        `<strong>Error:</strong> ${error.message}\n\n` +
+                        `<strong>Check:</strong>\n` +
+                        `• Backend logs for errors\n` +
+                        `• Firewall settings\n` +
+                        `• Network connection`;
+                }
+                
+                showResult('error', errorMessage);
+            }
+        }
+        
+        function showResult(type, message) {
+            const resultDiv = document.getElementById('result');
+            resultDiv.className = `status ${type}`;
+            resultDiv.innerHTML = message;
+            resultDiv.style.display = 'block';
+        }
+        
+        // Auto-test on load
+        window.addEventListener('load', () => {
+            setTimeout(testConnection, 500);
+        });
+    </script>
+</body>
+</html>

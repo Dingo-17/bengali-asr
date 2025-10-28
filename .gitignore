@@ -1,0 +1,48 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+*.egg-info/
+dist/
+build/
+
+# Models (too large for git)
+models/*.pt
+models/*.pth
+models/*.bin
+models/*.onnx
+models/checkpoint-*/
+
+# Data (keep structure, ignore files)
+data/raw/*.wav
+data/raw/*.mp3
+data/processed/
+*.csv
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+logs/*.log
+*.log
+
+# Environment
+.env
+.env.local
+
+# Backups
+*.backup
+*.bak

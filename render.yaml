@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: bengali-asr-api
+    env: python
+    region: oregon
+    plan: free
+    branch: main
+    buildCommand: pip install --no-cache-dir -r requirements.txt
+    startCommand: uvicorn inference.server:app --host 0.0.0.0 --port $PORT --workers 2
+    healthCheckPath: /health
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.10.0
+      - key: MODEL_TYPE
+        value: wav2vec2
+      - key: PYTHONUNBUFFERED
+        value: 1

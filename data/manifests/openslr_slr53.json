@@ -1,0 +1,8 @@
+{
+  "dataset_name": "openslr_slr53",
+  "source_url": "https://www.openslr.org/53/",
+  "description": "Bengali ASR training data corpus",
+  "language": "bn",
+  "total_hours": 196,
+  "files": []
+}

@@ -1,0 +1,52 @@
+# Dockerfile for GPU deployment
+# Optimized for GCP, AWS with NVIDIA GPUs
+
+FROM nvidia/cuda:11.8.0-cudnn8-runtime-ubuntu22.04
+
+# Set working directory
+WORKDIR /app
+
+# Install Python and system dependencies
+RUN apt-get update && apt-get install -y \
+    python3.10 \
+    python3-pip \
+    ffmpeg \
+    libsndfile1 \
+    git \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+# Update pip
+RUN pip3 install --upgrade pip
+
+# Copy requirements
+COPY requirements.txt .
+
+# Install PyTorch with CUDA support
+RUN pip install --no-cache-dir torch torchaudio --index-url https://download.pytorch.org/whl/cu118
+
+# Install other Python dependencies
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy application code
+COPY inference/ ./inference/
+COPY train/utils.py ./train/
+
+# Create directory for models
+RUN mkdir -p /app/models
+
+# Set environment variables
+ENV MODEL_PATH="/app/models/checkpoint-best"
+ENV MODEL_TYPE="wav2vec2"
+ENV PYTHONUNBUFFERED=1
+ENV CUDA_VISIBLE_DEVICES=0
+
+# Expose port
+EXPOSE 8000
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+    CMD curl -f http://localhost:8000/health || exit 1
+
+# Run server with GPU support
+CMD ["uvicorn", "inference.server:app", "--host", "0.0.0.0", "--port", "8000", "--workers", "1"]

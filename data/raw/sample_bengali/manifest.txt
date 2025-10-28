@@ -1,0 +1,5 @@
+# Sample Bengali transcripts for testing
+# Format: filename	transcript	speaker
+sample_001.wav	আমি বাংলায় কথা বলি	speaker_001
+sample_002.wav	এটি একটি পরীক্ষা	speaker_001
+sample_003.wav	বাংলাদেশ আমার দেশ	speaker_002
