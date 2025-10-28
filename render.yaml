@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: bengali-asr-api
+    name: bengali-asr-demo
     env: python
     region: oregon
     plan: free
