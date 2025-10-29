@@ -1,5 +1,5 @@
 // ===== Configuration =====
-const API_URL = 'http://localhost:8000';  // Change this to your deployed API URL
+const API_URL = 'https://bengali-asr-demo.onrender.com';  // Live Render backend
 
 // ===== Mobile Menu Toggle =====
 const hamburger = document.querySelector('.hamburger');
